@@ -53,7 +53,7 @@ Since the slice created is made using `make`, please be sure to `delete` it! Gar
 
 
 # Formulae
-The formulae for this library are as follows. If you are a mathetician and know a better way to write these formulae, let me know!
+The formulae for this library are as follows. If you are a mathematician and know a better way to write these formulae, let me know!
 
 ## g
 g(n) = n of n * size of n-1 + n of n-1
