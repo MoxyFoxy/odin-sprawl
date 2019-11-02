@@ -23,10 +23,10 @@ slice[sprawl([4]int{0, 3, 4, 1}, [4]int{10, 10, 10, 10})]
 `sprawl_elem` is an abstraction over `sprawl_index` that allows you to get the element instead of the index. This is for purely aesthetic preference. `sprawl_index` and `sprawl_elem` are equally acceptable; the choice depends on the user.
 
 ### Example
-The only difference between this and `sprawl_index` is that you pass the slice itself instead of calling `sprawl` inside of the slice. This is accessing the same index and slice as in the example under `sprawl_index`.
+The only difference between this and `sprawl_index` is that you pass a pointer to the slice itself instead of calling `sprawl` inside of the slice. This is accessing the same index and slice as in the example under `sprawl_index`.
 
 ```
-sprawl(slice, [4]int{0, 3, 4, 1}, [4]int{10, 10, 10, 10})
+sprawl(&slice, [4]int{0, 3, 4, 1}, [4]int{10, 10, 10, 10})
 ```
 
 
