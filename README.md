@@ -37,7 +37,7 @@ slice := sprawl([4]int{10, 10, 10, 10}, int)
 The second value is the type you want the slice to be. In this example, it's an int, therefore the type would be []int.
 
 ### NOTE
-Since the slice created is made using make, please be sure to delete it! Garbage doesn't clean itself around here!
+Since the slice created is made using `make`, please be sure to `delete` it! Garbage doesn't clean itself around here!
 
 # Formulae
 The formulae for this library are as follows. If you are a mathetician and know a better way to write these formulae, let me know!
