@@ -49,10 +49,8 @@ sprawl_index :: inline proc(indexes, sizes: [$N]$T) -> T {
     inline for i in 0..<len(indexes) - 2 {
         mul := T(1);
 
-        // Will be removed once issue #461 is fixed. Necessary for now
-        steps := len(sizes) - i - 1;
-
-        for j in 0..<steps {
+        // Multiply the sizes together, up to the count of i - 1
+        for j in 0..<len(sizes) - i - 1 {
             mul *= sizes[j];
         }
 
