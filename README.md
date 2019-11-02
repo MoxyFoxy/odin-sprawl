@@ -1,6 +1,9 @@
 # Sprawl
 Sprawl is a lightweight, optimized Odin library for dealing with n-dimensional slices
 
+### Collaborators
+- Tetralux (optimization)
+- sci4me (optimization)
 
 
 
