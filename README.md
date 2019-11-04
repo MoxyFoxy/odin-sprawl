@@ -41,7 +41,10 @@ sprawl(&slice, [4]int{0, 3, 4, 1}, [4]int{10, 10, 10, 10})
 ```
 
 ### sprawl_elem_2d
-This is like how `sprawl_elem` is for `sprawl_index`, except for `sprawl_2d`. Just like in `sprawl_2d`, let's say we have a 2D array of size (10, 11) (sizex, sizey). This is how we would access the element at index (5, 6), 5 being x and 6 being y:
+This is like how `sprawl_elem` is for `sprawl_index`, except for `sprawl_2d`.
+
+#### Example
+Just like in `sprawl_2d`, let's say we have a 2D array of size (10, 11) (sizex, sizey). This is how we would access the element at index (5, 6), 5 being x and 6 being y:
 
 ```
 sprawl(&slice, 5, 6, 10)
