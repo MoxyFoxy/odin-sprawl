@@ -42,7 +42,6 @@ sprawl :: proc {
     sprawl_elem_2d,
     sprawl_create,
     sprawl_set,
-    sprawl_set_2d,
 };
 
 // Umbrella procedure for setting values
