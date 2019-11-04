@@ -32,12 +32,32 @@ h :: proc(n: $T, sizes: []T) -> T {
     return u64(n) * mul(sizes);
 }
 
+
+
 // Public namespace for sprawl
 sprawl :: proc {
     sprawl_index,
+    sprawl_2d,
     sprawl_elem,
+    sprawl_elem_2d,
     sprawl_create,
+    sprawl_set,
+    sprawl_set_2d,
 };
+
+// Umbrella procedure for setting values
+sprawl_set :: proc {
+    _sprawl_set,
+    _sprawl_set_2d,
+};
+
+// Umbrella procedure for bounds-checking
+sprawl_bounds :: proc {
+    _sprawl_bounds,
+    _sprawl_bounds_2d,
+};
+
+
 
 // Returns index from specified indexes and sizes: slice[sprawl(indexes, sizes)]
 sprawl_index :: inline proc(indexes, sizes: [$N]$T) -> T {
@@ -61,9 +81,19 @@ sprawl_index :: inline proc(indexes, sizes: [$N]$T) -> T {
     return output;
 }
 
+// Returns index from x, y, and sizex for a 2D array
+sprawl_2d :: inline proc(x, y, sizex: $T) -> T {
+    return y * sizex + x;
+}
+
 // Returns element instead of index: sprawl(slice, indexes, sizes)
 sprawl_elem :: inline proc(array: ^[]$R, indexes, sizes: [$N]$T) -> R {
     return array[sprawl_index(indexes, sizes)];
+}
+
+// Returns element instead of index: sprawl(slice, y, x, sizex)
+sprawl_elem_2d :: inline proc(array: ^[]$R, x, y, sizex: $T) -> R {
+    return array[sprawl_2d(x, y, sizex)];
 }
 
 // Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
@@ -75,4 +105,33 @@ sprawl_create :: inline proc(sizes: [$N]$T, $type: typeid) -> []type {
     }
 
     return make([]type, mul);
+}
+
+// Sets an index to a specific value
+_sprawl_set :: inline proc(array: ^[]$R, indexes, sizes: [$N]$T, value: R) {
+    array[sprawl(indexes, sizes)] = value;
+}
+
+// Sets an index to a specific value in a 2D slice
+_sprawl_set_2d :: inline proc(array: ^[]$R, x, y, sizex: $T, value: R) {
+    array[y * sizex + x] = value;
+}
+
+// Checks if an index is in-bounds
+_sprawl_bounds :: inline proc(indexes, sizes: [$N]$T) -> bool {
+    mul_i := 1;
+    mul_s := 1;
+
+    // The `- 0` is required for inlining the for loop until issue #466 is fixed
+    inline for i in 0..<len(indexes) - 0 {
+        mul_i *= indexes[i];
+        mul_s *= sizes[i];
+    }
+
+    return mul_i < mul_s;
+}
+
+// Check if an index is in-bounds in a 2D slice
+_sprawl_bounds_2d :: inline proc(x, y, sizex, sizey: $T) -> bool {
+    return y * sizex + x < sizex * sizey;
 }
