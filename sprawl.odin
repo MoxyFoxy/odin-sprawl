@@ -115,11 +115,11 @@ _sprawl_set_2d :: inline proc(array: ^[]$R, x, y, sizex: $T, value: R) {
 }
 
 // Checks if an index is in-bounds
-_sprawl_bounds :: inline proc(indexes, sizes: [$N]$T) -> bool {
+_sprawl_bounds :: proc(indexes, sizes: [$N]$T) -> bool {
     mul_i := 1;
     mul_s := 1;
 
-    inline for i in 0..<len(indexes) {
+    for i in 0..<len(indexes) {
         mul_i *= indexes[i];
         mul_s *= sizes[i];
     }
