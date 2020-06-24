@@ -8,7 +8,7 @@ Sprawl is a lightweight, optimized Odin library for dealing with n-dimensional s
 
 
 # Procedures
-Sprawl has three group procedures, three main procedures, and several sub-procedures. The three main procedures (which are groups of several procedures) are: `sprawl`, `set`, and `bounds`.
+Sprawl has three group procedures, three main procedures, and several sub-procedures. The three main procedures (which are groups of several procedures) are: `sprawl`, `set`, and `in_bounds`.
 
 ## index
 `index` is the core of this library. This allows you to access an n-dimensional slice given arrays and lengths.
@@ -40,10 +40,10 @@ slice[sprawl(5, 6, 10)]
 This is under the `sprawl` procedure group.
 
 ### Example
-The only difference between this and `index` is that you pass a pointer to the slice itself instead of calling `sprawl` inside of the slice. This is accessing the same index and slice as in the example under `index`.
+The only difference between this and `index` is that you pass the slice itself instead of calling `sprawl` inside of the slice. This is accessing the same index and slice as in the example under `index`.
 
 ```
-sprawl(&slice, [4]int{0, 3, 4, 1}, [4]int{10, 10, 10, 10})
+sprawl(slice, [4]int{0, 3, 4, 1}, [4]int{10, 10, 10, 10})
 ```
 
 ### elem_2d
@@ -55,7 +55,7 @@ This is under the `sprawl` procedure group.
 Just like in `2d`, let's say we have a 2D array of size (10, 11) (sizex, sizey). This is how we would access the element at index (5, 6), 5 being x and 6 being y:
 
 ```
-sprawl(&slice, 5, 6, 10)
+sprawl(slice, 5, 6, 10)
 ```
 
 ## create_slice
@@ -84,7 +84,7 @@ This is under the `set` procedure group.
 Let's say we have a slice of size (10, 10, 10) and wish to set the element at index (5, 6, 7) to 12:
 
 ```
-sprawl(&arr, [3]int{5, 6, 7], [3]int{10, 10, 10}, 12)
+sprawl(arr, [3]int{5, 6, 7], [3]int{10, 10, 10}, 12)
 ```
 
 ### \_set_2d
@@ -96,13 +96,13 @@ This is under the `set` procedure group.
 Let's say we have a slice of size (10, 11) (sizex, sizey) and wish to set the element at index (5, 6), 5 being x, and 6 being y, to 12:
 
 ```
-sprawl(&arr, 5, 6, 10, 12)
+sprawl(arr, 5, 6, 10, 12)
 ```
 
-## \_bounds
-This is the only exception to being under the umbrella of the `sprawl` procedure. This procedure is like this as its parameter types clash with `index`. Why the \_ at the beginning? This is so it can fit in the same procedure "namespace" as `_bounds_2d`. This procedure returns a boolean on whether or not an index is in bounds.
+## \_in_bounds
+This is the only exception to being under the umbrella of the `sprawl` procedure. This procedure is like this as its parameter types clash with `index`. Why the \_ at the beginning? This is so it can fit in the same procedure "namespace" as `_in_bounds_2d`. This procedure returns a boolean on whether or not an index is in bounds.
 
-This is under the `bounds` procedure group.
+This is under the `in_bounds` procedure group.
 
 ### Example
 Let's say we have a slice of size (10, 10, 10) and are trying to access (11, 11, 11) (which would return `false`):
@@ -111,10 +111,10 @@ Let's say we have a slice of size (10, 10, 10) and are trying to access (11, 11,
 bounds([3]int{11, 11, 11}, [3]int{10, 10, 10})
 ```
 
-### \_bounds_2d
-This is a 2-dimensional version of `bounds`.
+### \_in_bounds_2d
+This is a 2-dimensional version of `in_bounds`.
 
-This is under the `bounds` procedure group.
+This is under the `in_bounds` procedure group.
 
 #### Example
 Let's say we have a slice of size (10, 11) (sizex, sizey) and wish to see if index (5, 6) is in-bounds (which would return `true`):

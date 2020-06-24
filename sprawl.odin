@@ -49,7 +49,7 @@ set :: proc {
 };
 
 // Umbrella procedure for bounds-checking
-bounds :: proc {
+in_bounds :: proc {
     _bounds,
     _bounds_2d,
 };
@@ -115,7 +115,7 @@ _set_2d :: inline proc (array: []$T, x, y, sizex: $NT, value: T)       where int
 }
 
 // Checks if an index is in-bounds
-_bounds :: proc (indexes, lengths: [$N]$NT) -> bool                    where intrinsics.type_is_integer(NT) {
+_in_bounds :: proc (indexes, lengths: [$N]$NT) -> bool                 where intrinsics.type_is_integer(NT) {
     mul_i := 1;
     mul_s := 1;
 
@@ -128,6 +128,6 @@ _bounds :: proc (indexes, lengths: [$N]$NT) -> bool                    where int
 }
 
 // Check if an index is in-bounds in a 2D slice
-_bounds_2d :: inline proc (x, y, sizex, sizey: $NT) -> bool            where intrinsics.type_is_integer(NT) {
+_in_bounds_2d :: inline proc (x, y, sizex, sizey: $NT) -> bool         where intrinsics.type_is_integer(NT) {
     return y * sizex + x < sizex * sizey;
 }
