@@ -11,7 +11,7 @@ Sprawl is a lightweight, optimized Odin library for dealing with n-dimensional s
 Sprawl has three group procedures, three main procedures, and several sub-procedures. The three main procedures (which are groups of several procedures) are: `sprawl`, `set`, and `bounds`.
 
 ## index
-`index` is the core of this library. This allows you to access an n-dimensional slice given arrays and sizes.
+`index` is the core of this library. This allows you to access an n-dimensional slice given arrays and lengths.
 
 This is under the `sprawl` procedure group.
 
@@ -59,7 +59,7 @@ sprawl(&slice, 5, 6, 10)
 ```
 
 ## create
-`create` is another huge core part of the library. This procedure allows you to create an n-dimensional slice. It's called as if you were making a normal slice, except with sizes!
+`create` is another huge core part of the library. This procedure allows you to create an n-dimensional slice. It's called as if you were making a normal slice, except with lengths!
 
 This is not under a procedure group.
 

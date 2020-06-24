@@ -28,8 +28,8 @@ g :: proc(n, size, offset: $T) -> T {
 
 @private
 // For purely documentation and mathematical purposes
-h :: proc(n: $T, sizes: []T) -> T {
-    return u64(n) * mul(sizes);
+h :: proc(n: $T, lengths: []T) -> T {
+    return u64(n) * mul(lengths);
 }
 
 
@@ -56,19 +56,19 @@ bounds :: proc {
 
 
 
-// Returns index from specified indexes and sizes: slice[sprawl(indexes, sizes)]
-index :: proc(indexes, sizes: [$N]$T) -> T {
+// Returns index from specified indexes and lengths: slice[sprawl(indexes, lengths)]
+index :: proc(indexes, lengths: [$N]$T) -> T {
 
     // This is formula g
-    output := indexes[1] * sizes[0] + indexes[0];
+    output := indexes[1] * lengths[0] + indexes[0];
 
     // Iterate every value except the last two
     for i in 0..<len(indexes) - 2 {
         mul := T(1);
 
-        // Multiply the sizes together, up to the count of i - 1
-        for j in 0..<len(sizes) - i - 1 {
-            mul *= sizes[j];
+        // Multiply the lengths together, up to the count of i - 1
+        for j in 0..<len(lengths) - i - 1 {
+            mul *= lengths[j];
         }
 
         // This is formula h
@@ -83,9 +83,9 @@ index_2d :: inline proc(x, y, sizex: $T) -> T {
     return y * sizex + x;
 }
 
-// Returns element instead of index: sprawl(slice, indexes, sizes)
-elem :: inline proc(array: ^[]$R, indexes, sizes: [$N]$T) -> R {
-    return array[index(indexes, sizes)];
+// Returns element instead of index: sprawl(slice, indexes, lengths)
+elem :: inline proc(array: ^[]$R, indexes, lengths: [$N]$T) -> R {
+    return array[index(indexes, lengths)];
 }
 
 // Returns element instead of index: sprawl(slice, y, x, sizex)
@@ -94,19 +94,19 @@ elem_2d :: inline proc(array: ^[]$R, x, y, sizex: $T) -> R {
 }
 
 // Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
-create :: proc(sizes: [$N]$T, $type: typeid) -> []type {
+create :: proc(lengths: [$N]$T, $type: typeid) -> []type {
     mul := 1;
 
-    for i in 0..len(sizes) - 1 {
-        mul *= sizes[i];
+    for i in 0..len(lengths) - 1 {
+        mul *= lengths[i];
     }
 
     return make([]type, mul);
 }
 
 // Sets an index to a specific value
-_set :: inline proc(array: ^[]$R, indexes, sizes: [$N]$T, value: R) {
-    array[sprawl(indexes, sizes)] = value;
+_set :: inline proc(array: ^[]$R, indexes, lengths: [$N]$T, value: R) {
+    array[sprawl(indexes, lengths)] = value;
 }
 
 // Sets an index to a specific value in a 2D slice
@@ -115,13 +115,13 @@ _set_2d :: inline proc(array: ^[]$R, x, y, sizex: $T, value: R) {
 }
 
 // Checks if an index is in-bounds
-_bounds :: proc(indexes, sizes: [$N]$T) -> bool {
+_bounds :: proc(indexes, lengths: [$N]$T) -> bool {
     mul_i := 1;
     mul_s := 1;
 
     for i in 0..<len(indexes) {
         mul_i *= indexes[i];
-        mul_s *= sizes[i];
+        mul_s *= lengths[i];
     }
 
     return mul_i < mul_s;
