@@ -36,28 +36,28 @@ h :: proc(n: $T, sizes: []T) -> T {
 
 // Public namespace for sprawl
 sprawl :: proc {
-    sprawl_index,
-    sprawl_index_2d,
-    sprawl_elem,
-    sprawl_elem_2d,
+    index,
+    index_2d,
+    elem,
+    elem_2d,
 };
 
 // Umbrella procedure for setting values
-sprawl_set :: proc {
-    _sprawl_set,
-    _sprawl_set_2d,
+set :: proc {
+    _set,
+    _set_2d,
 };
 
 // Umbrella procedure for bounds-checking
-sprawl_bounds :: proc {
-    _sprawl_bounds,
-    _sprawl_bounds_2d,
+bounds :: proc {
+    _bounds,
+    _bounds_2d,
 };
 
 
 
 // Returns index from specified indexes and sizes: slice[sprawl(indexes, sizes)]
-sprawl_index :: proc(indexes, sizes: [$N]$T) -> T {
+index :: proc(indexes, sizes: [$N]$T) -> T {
 
     // This is formula g
     output := indexes[1] * sizes[0] + indexes[0];
@@ -79,22 +79,22 @@ sprawl_index :: proc(indexes, sizes: [$N]$T) -> T {
 }
 
 // Returns index from x, y, and sizex for a 2D array
-sprawl_index_2d :: inline proc(x, y, sizex: $T) -> T {
+index_2d :: inline proc(x, y, sizex: $T) -> T {
     return y * sizex + x;
 }
 
 // Returns element instead of index: sprawl(slice, indexes, sizes)
-sprawl_elem :: inline proc(array: ^[]$R, indexes, sizes: [$N]$T) -> R {
-    return array[sprawl_index(indexes, sizes)];
+elem :: inline proc(array: ^[]$R, indexes, sizes: [$N]$T) -> R {
+    return array[index(indexes, sizes)];
 }
 
 // Returns element instead of index: sprawl(slice, y, x, sizex)
-sprawl_elem_2d :: inline proc(array: ^[]$R, x, y, sizex: $T) -> R {
-    return array[sprawl_2d(x, y, sizex)];
+elem_2d :: inline proc(array: ^[]$R, x, y, sizex: $T) -> R {
+    return array[2d(x, y, sizex)];
 }
 
 // Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
-sprawl_create :: proc(sizes: [$N]$T, $type: typeid) -> []type {
+create :: proc(sizes: [$N]$T, $type: typeid) -> []type {
     mul := 1;
 
     for i in 0..len(sizes) - 1 {
@@ -105,17 +105,17 @@ sprawl_create :: proc(sizes: [$N]$T, $type: typeid) -> []type {
 }
 
 // Sets an index to a specific value
-_sprawl_set :: inline proc(array: ^[]$R, indexes, sizes: [$N]$T, value: R) {
+_set :: inline proc(array: ^[]$R, indexes, sizes: [$N]$T, value: R) {
     array[sprawl(indexes, sizes)] = value;
 }
 
 // Sets an index to a specific value in a 2D slice
-_sprawl_set_2d :: inline proc(array: ^[]$R, x, y, sizex: $T, value: R) {
+_set_2d :: inline proc(array: ^[]$R, x, y, sizex: $T, value: R) {
     array[y * sizex + x] = value;
 }
 
 // Checks if an index is in-bounds
-_sprawl_bounds :: proc(indexes, sizes: [$N]$T) -> bool {
+_bounds :: proc(indexes, sizes: [$N]$T) -> bool {
     mul_i := 1;
     mul_s := 1;
 
@@ -128,6 +128,6 @@ _sprawl_bounds :: proc(indexes, sizes: [$N]$T) -> bool {
 }
 
 // Check if an index is in-bounds in a 2D slice
-_sprawl_bounds_2d :: inline proc(x, y, sizex, sizey: $T) -> bool {
+_bounds_2d :: inline proc(x, y, sizex, sizey: $T) -> bool {
     return y * sizex + x < sizex * sizey;
 }
