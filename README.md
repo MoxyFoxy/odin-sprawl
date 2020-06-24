@@ -58,8 +58,8 @@ Just like in `2d`, let's say we have a 2D array of size (10, 11) (sizex, sizey).
 sprawl(&slice, 5, 6, 10)
 ```
 
-## create
-`create` is another huge core part of the library. This procedure allows you to create an n-dimensional slice. It's called as if you were making a normal slice, except with lengths!
+## create_slice
+`create_slice` is another huge core part of the library. This procedure allows you to create an n-dimensional slice. It's called as if you were making a normal slice, except with lengths!
 
 This is not under a procedure group.
 
