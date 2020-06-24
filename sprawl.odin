@@ -94,7 +94,7 @@ elem_2d :: inline proc (array: ^[]$T, x, y, sizex: $NT) -> T where intrinsics.ty
 }
 
 // Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
-create_slice :: proc (lengths: [$N]$NT, $type: typeid) -> []type where intrinsics.type_is_integer(NT) {
+create_slice :: proc (lengths: [$N]$NT, $T: typeid) -> []T where intrinsics.type_is_integer(NT) {
     mul := 1;
 
     for i in 0..len(lengths) - 1 {
