@@ -119,8 +119,7 @@ _sprawl_bounds :: inline proc(indexes, sizes: [$N]$T) -> bool {
     mul_i := 1;
     mul_s := 1;
 
-    // The `- 0` is required for inlining the for loop until issue #466 is fixed
-    inline for i in 0..<len(indexes) - 0 {
+    inline for i in 0..<len(indexes) {
         mul_i *= indexes[i];
         mul_s *= sizes[i];
     }
