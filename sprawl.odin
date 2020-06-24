@@ -37,11 +37,9 @@ h :: proc(n: $T, sizes: []T) -> T {
 // Public namespace for sprawl
 sprawl :: proc {
     sprawl_index,
-    sprawl_2d,
+    sprawl_index_2d,
     sprawl_elem,
     sprawl_elem_2d,
-    sprawl_create,
-    sprawl_set,
 };
 
 // Umbrella procedure for setting values
@@ -59,13 +57,13 @@ sprawl_bounds :: proc {
 
 
 // Returns index from specified indexes and sizes: slice[sprawl(indexes, sizes)]
-sprawl_index :: inline proc(indexes, sizes: [$N]$T) -> T {
+sprawl_index :: proc(indexes, sizes: [$N]$T) -> T {
 
     // This is formula g
     output := indexes[1] * sizes[0] + indexes[0];
 
     // Iterate every value except the last two
-    inline for i in 0..<len(indexes) - 2 {
+    for i in 0..<len(indexes) - 2 {
         mul := T(1);
 
         // Multiply the sizes together, up to the count of i - 1
@@ -81,7 +79,7 @@ sprawl_index :: inline proc(indexes, sizes: [$N]$T) -> T {
 }
 
 // Returns index from x, y, and sizex for a 2D array
-sprawl_2d :: inline proc(x, y, sizex: $T) -> T {
+sprawl_index_2d :: inline proc(x, y, sizex: $T) -> T {
     return y * sizex + x;
 }
 
@@ -96,10 +94,10 @@ sprawl_elem_2d :: inline proc(array: ^[]$R, x, y, sizex: $T) -> R {
 }
 
 // Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
-sprawl_create :: inline proc(sizes: [$N]$T, $type: typeid) -> []type {
+sprawl_create :: proc(sizes: [$N]$T, $type: typeid) -> []type {
     mul := 1;
 
-    inline for i in 0..len(sizes) - 1 {
+    for i in 0..len(sizes) - 1 {
         mul *= sizes[i];
     }
 
