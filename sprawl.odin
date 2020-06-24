@@ -57,7 +57,7 @@ bounds :: proc {
 
 
 // Returns index from specified indexes and lengths: slice[sprawl(indexes, lengths)]
-index :: proc (indexes, lengths: [$N]$NT) -> NT                         where intrinsics.type_is_integer(NT) {
+index :: proc (indexes, lengths: [$N]$NT) -> NT                        where intrinsics.type_is_integer(NT) {
 
     // This is formula g
     output := indexes[1] * lengths[0] + indexes[0];
@@ -79,22 +79,22 @@ index :: proc (indexes, lengths: [$N]$NT) -> NT                         where in
 }
 
 // Returns index from x, y, and sizex for a 2D array
-index_2d :: inline proc (x, y, sizex: $NT) -> NT                        where intrinsics.type_is_integer(NT) {
+index_2d :: inline proc (x, y, sizex: $NT) -> NT                       where intrinsics.type_is_integer(NT) {
     return y * sizex + x;
 }
 
 // Returns element instead of index: sprawl(slice, indexes, lengths)
-elem :: inline proc (array: ^[]$T, indexes, lengths: [$N]$NT) -> T      where intrinsics.type_is_integer(NT) {
+elem :: inline proc (array: []$T, indexes, lengths: [$N]$NT) -> T      where intrinsics.type_is_integer(NT) {
     return array[index(indexes, lengths)];
 }
 
 // Returns element instead of index: sprawl(slice, y, x, sizex)
-elem_2d :: inline proc (array: ^[]$T, x, y, sizex: $NT) -> T            where intrinsics.type_is_integer(NT) {
+elem_2d :: inline proc (array: []$T, x, y, sizex: $NT) -> T            where intrinsics.type_is_integer(NT) {
     return array[2d(x, y, sizex)];
 }
 
 // Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
-create_slice :: proc (lengths: [$N]$NT, $T: typeid) -> []T              where intrinsics.type_is_integer(NT) {
+create_slice :: proc (lengths: [$N]$NT, $T: typeid) -> []T             where intrinsics.type_is_integer(NT) {
     mul := 1;
 
     for i in 0..len(lengths) - 1 {
@@ -105,17 +105,17 @@ create_slice :: proc (lengths: [$N]$NT, $T: typeid) -> []T              where in
 }
 
 // Sets an index to a specific value
-_set :: inline proc (array: ^[]$T, indexes, lengths: [$N]$NT, value: T) where intrinsics.type_is_integer(NT) {
+_set :: inline proc (array: []$T, indexes, lengths: [$N]$NT, value: T) where intrinsics.type_is_integer(NT) {
     array[sprawl(indexes, lengths)] = value;
 }
 
 // Sets an index to a specific value in a 2D slice
-_set_2d :: inline proc (array: ^[]$T, x, y, sizex: $NT, value: T)       where intrinsics.type_is_integer(NT) {
+_set_2d :: inline proc (array: []$T, x, y, sizex: $NT, value: T)       where intrinsics.type_is_integer(NT) {
     array[y * sizex + x] = value;
 }
 
 // Checks if an index is in-bounds
-_bounds :: proc (indexes, lengths: [$N]$NT) -> bool                     where intrinsics.type_is_integer(NT) {
+_bounds :: proc (indexes, lengths: [$N]$NT) -> bool                    where intrinsics.type_is_integer(NT) {
     mul_i := 1;
     mul_s := 1;
 
@@ -128,6 +128,6 @@ _bounds :: proc (indexes, lengths: [$N]$NT) -> bool                     where in
 }
 
 // Check if an index is in-bounds in a 2D slice
-_bounds_2d :: inline proc (x, y, sizex, sizey: $NT) -> bool             where intrinsics.type_is_integer(NT) {
+_bounds_2d :: inline proc (x, y, sizex, sizey: $NT) -> bool            where intrinsics.type_is_integer(NT) {
     return y * sizex + x < sizex * sizey;
 }
