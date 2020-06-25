@@ -1,8 +1,12 @@
 package sprawl
 
-// Made in collaboration with:
+import "core:intrinsics"
+import "core:fmt"
+
+// Made with help from:
 //   - Tetralux (optimization)
 //   - sci4me (optimization)
+//   - L2 (LaTeX notation)
 //
 // Original code made by F0x1fy
 //
@@ -11,26 +15,17 @@ package sprawl
 //
 // Formulae:
 //   - g: - Calculates the offset value
-//      | g(n) = n of n * size of n-1 + n of n-1
+//      | g(l, i) = i_1 \cdot l_0 + i_0
 //   - h: - Calculates the raw dimensions
-//      | h(n) = n of n * size of n-1 x size of n-2 x ... x size1
+//      | h(l, n, i, j) = i_{n - j - 1} \cdot \prod_{k = 0}^{n - j - 2} l_k
 //   - f: - Iteratively adds the h values for every index, then adds g
-//      | f(n1, n2, ..., n of n) = h(n) + h(n of n-1) + h(...) + h(n3) + g(n2)
+//      | f(l, n, i) = \sum_{j = 0}^{n - 3} (h(l_j, i, j)) + g(l, i)
+//
+// F expanded:
+// | f(l, n, i) = \sum_{j = 0}^{n - 3} \left(i_{n - j - 1} \cdot \prod_{k = 0}^{n - j - 2} l_k\right) + i_1 \cdot l_0 + i_0
 //
 // Simplified formula:
 //   - index * size + offset
-
-@private
-// For purely documentation and mathematical purposes
-g :: proc (n, size, offset: $NT) -> NT where intrinsics.type_is_integer(NT) {
-    return NT(n * size + offset);
-}
-
-@private
-// For purely documentation and mathematical purposes
-h :: proc (n: $NT, lengths: []NT) -> NT where intrinsics.type_is_integer(NT) {
-    return NT(n) * mul(lengths);
-}
 
 index :: proc {
     _index,
@@ -75,7 +70,7 @@ _index :: proc (indexes, lengths: []$NT) -> NT                       where intri
 }
 
 // Returns index from x, y, and sizex for a 2D array
-_index_2d :: inline proc (x, y, sizex: $NT) -> NT                      where intrinsics.type_is_integer(NT) {
+_index_2d :: inline proc (x, y, sizex: $NT) -> NT                    where intrinsics.type_is_integer(NT) {
     return y * sizex + x;
 }
 
@@ -85,7 +80,7 @@ _get :: inline proc (array: []$T, indexes, lengths: []$NT) -> T      where intri
 }
 
 // Returns element instead of index: get_2d(slice, y, x, sizex)
-_get_2d :: inline proc (array: []$T, x, y, sizex: $NT) -> T            where intrinsics.type_is_integer(NT) {
+_get_2d :: inline proc (array: []$T, x, y, sizex: $NT) -> T          where intrinsics.type_is_integer(NT) {
     return array[_index_2d(x, y, sizex)];
 }
 
@@ -95,7 +90,7 @@ _set :: inline proc (array: []$T, indexes, lengths: []$NT, value: T) where intri
 }
 
 // Sets an index to a specific value in a 2D slice
-_set_2d :: inline proc (array: []$T, x, y, sizex: $NT, value: T)       where intrinsics.type_is_integer(NT) {
+_set_2d :: inline proc (array: []$T, x, y, sizex: $NT, value: T)     where intrinsics.type_is_integer(NT) {
     array[y * sizex + x] = value;
 }
 
@@ -113,7 +108,7 @@ _in_bounds :: proc (indexes, lengths: []$NT) -> bool                 where intri
 }
 
 // Check if an index is in-bounds in a 2D slice
-_in_bounds_2d :: inline proc (x, y, sizex, sizey: $NT) -> bool         where intrinsics.type_is_integer(NT) {
+_in_bounds_2d :: inline proc (x, y, sizex, sizey: $NT) -> bool       where intrinsics.type_is_integer(NT) {
     return y * sizex + x < sizex * sizey;
 }
 
@@ -121,7 +116,18 @@ _in_bounds_2d :: inline proc (x, y, sizex, sizey: $NT) -> bool         where int
 create_slice :: proc (lengths: []$NT, $T: typeid) -> []T             where intrinsics.type_is_integer(NT) {
     mul := 1;
 
-    for i in 0..len(lengths) - 1 {
+    for i in 0..<len(lengths) {
+        mul *= lengths[i];
+    }
+
+    return make([]T, mul);
+}
+
+// Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
+create_slice_const :: proc (lengths: [$N]$NT, $T: typeid) -> []T       where intrinsics.type_is_integer(NT) {
+    mul := 1;
+
+    for i in 0..<N {
         mul *= lengths[i];
     }
 
@@ -129,6 +135,6 @@ create_slice :: proc (lengths: []$NT, $T: typeid) -> []T             where intri
 }
 
 // Creates a 2-dimensional sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
-create_slice_2d :: proc (sizex, sizey: $NT, $T) -> []T where intrinsics.type_is_integer(NT) {
+create_slice_2d :: proc (sizex, sizey: $NT, $T: typeid) -> []T       where intrinsics.type_is_integer(NT) {
     return make([]T, sizex * sizey);
 }
