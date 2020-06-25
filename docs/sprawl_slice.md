@@ -14,7 +14,7 @@ Here's an example of getting the index of (0, 3, 4, 1). The size of the array is
 index(slice, [4]int{0, 3, 4, 1})
 ```
 
-Isn't this much cleaner than [the alternative](structless#_index)?
+Isn't this much cleaner than [the alternative](structless.md#_index)?
 
 ## struct_index_2d
 `struct_index_2d` is an abstraction over [\_index_2d](structless.md#_index_2d). Just like [struct_index](#struct_index), this isn't meant to be used for access. This is used for getting the index at a specific 2-dimensional offset.
