@@ -15,7 +15,7 @@ slice[index([4]int{0, 3, 4, 1}, [4]int{10, 10, 10, 10})]
 ```
 
 ### \_index_2d
-`_index_2d` is a sub-procedure of [\_index](#index). In code they are not related, but they are in concept. `_index_2d` is built for only 2-dimensional slices.
+`_index_2d` is a sub-procedure of [\_index](#_index). In code they are not related, but they are in concept. `_index_2d` is built for only 2-dimensional slices.
 
 This is under the `index_2d` procedure group.
 
@@ -27,24 +27,24 @@ slice[index_2d(5, 6, 10)]
 ```
 
 ## \_get
-`_get` is an abstraction over [\_index](#index) that allows you to get the element instead of the index. This is for purely aesthetic preference. `index` and `get` are equally acceptable; the choice depends on the user.
+`_get` is an abstraction over [\_index](#_index) that allows you to get the element instead of the index. This is for purely aesthetic preference. `index` and `get` are equally acceptable; the choice depends on the user.
 
 This is under the `get` procedure group.
 
 ### Example
-The only difference between this and [\_index](#index) is that you pass the slice itself instead of calling `_index` inside of the slice. This is accessing the same index and slice as in the example under [\_index](#index).
+The only difference between this and [\_index](#_index) is that you pass the slice itself instead of calling `_index` inside of the slice. This is accessing the same index and slice as in the example under [\_index](#_index).
 
 ```
 get(slice, [4]int{0, 3, 4, 1}, [4]int{10, 10, 10, 10})
 ```
 
 ### \_get_2d
-This is like how [\_get](#_get) is for [\_index](#index), except for [\_index\_2d](#index_2d).
+This is like how [\_get](#_get) is for [\_index](#_index), except for [\_index\_2d](#_index_2d).
 
 This is under the `get_2d` procedure group.
 
 #### Example
-Just like in [\_index\_2d](#index_2d), let's say we have a 2D array of size (10, 11) (sizex, sizey). This is how we would access the element at index (5, 6), 5 being x and 6 being y:
+Just like in [\_index\_2d](#_index_2d), let's say we have a 2D array of size (10, 11) (sizex, sizey). This is how we would access the element at index (5, 6), 5 being x and 6 being y:
 
 ```
 get_2d(slice, 5, 6, 10)
