@@ -94,8 +94,8 @@ _set_2d :: inline proc (array: []$T, x, y, sizex: $NT, value: T)     where intri
 
 // Checks if an index is in-bounds
 _in_bounds :: proc (indexes, lengths: []$NT) -> bool                 where intrinsics.type_is_integer(NT) {
-    mul_i := 1;
-    mul_s := 1;
+    mul_i := NT(1);
+    mul_s := NT(1);
 
     for i in 0..<len(indexes) {
         mul_i *= indexes[i];
@@ -112,7 +112,7 @@ _in_bounds_2d :: inline proc (x, y, sizex, sizey: $NT) -> bool       where intri
 
 // Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
 create_slice :: proc (lengths: []$NT, $T: typeid) -> []T             where intrinsics.type_is_integer(NT) {
-    mul := 1;
+    mul := NT(1);
 
     for i in 0..<len(lengths) {
         mul *= lengths[i];
@@ -123,7 +123,7 @@ create_slice :: proc (lengths: []$NT, $T: typeid) -> []T             where intri
 
 // Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
 create_slice_const :: proc (lengths: [$N]$NT, $T: typeid) -> []T       where intrinsics.type_is_integer(NT) {
-    mul := 1;
+    mul := NT(1);
 
     for i in 0..<N {
         mul *= lengths[i];
