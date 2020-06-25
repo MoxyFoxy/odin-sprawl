@@ -1,5 +1,5 @@
 # Sprawl_Slice
-The `Sprawl_Slice` is an abstraction over the [base Sprawl library](https://github.com/f0x1fy/odin-sprawl/sprawl.odin).
+The `Sprawl_Slice` is an abstraction over the [base Sprawl library](../sprawl.odin).
 This will help to make your code cleaner and easier to understand, removing about half of the messy slice construction you need to do.
 
 ## struct_index
