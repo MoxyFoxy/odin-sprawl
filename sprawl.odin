@@ -1,11 +1,11 @@
 package sprawl
 
 import "core:intrinsics"
+import "core:fmt"
 
 // Made with help from:
 //   - Tetralux (optimization)
 //   - sci4me (optimization)
-//   - L2 (LaTeX notation)
 //
 // Original code made by F0x1fy
 //

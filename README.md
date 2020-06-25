@@ -10,11 +10,18 @@ To read up on the library using `Sprawl_Slice` (an abstraction), please read [Sp
 
 # Formulae
 The variables and parameters are as follows:
+
 | `l` - `lengths`
+
 | `i` - `indexes`
+
 | `n` - length of `lengths` and `indexes` (they are the same)
+
 | `j` - iterator
+
 | `k` - iterator
+
+
 
 The formulae are 0-based. The upper values on the summation and multiplication are inclusive, hence why they are one lower than how they appear in the code.
 The formulae for this library are as follows.
