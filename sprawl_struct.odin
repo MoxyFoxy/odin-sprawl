@@ -46,7 +46,7 @@ struct_in_bounds :: inline proc (ndim: Sprawl_Slice($T, $NT), indexes: []NT) -> 
 
 // Abstraction over `_in_bounds_2d` for the `Sprawl_Slice` struct
 struct_in_bounds_2d :: inline proc (ndim: Sprawl_Slice($T, $NT), x, y: NT) -> bool {
-    return _in_bounds(ndim.slice, x, y, ndim.lengths);
+    return _in_bounds_2d(ndim.slice, x, y, ndim.lengths);
 }
 
 // Creates a `Sprawl_Slice` and initializes the sprawled slice
