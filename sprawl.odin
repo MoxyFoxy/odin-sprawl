@@ -1,7 +1,6 @@
 package sprawl
 
 import "core:intrinsics"
-import "core:fmt"
 
 // Made with help from:
 //   - Tetralux (optimization)
