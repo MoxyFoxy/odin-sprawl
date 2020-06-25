@@ -21,16 +21,20 @@ The formulae for this library are as follows.
 
 ## g
 ![formula g](images/eq_g.png)
+
 LaTeX: `g(l, i) = i_1 \cdot l_0 + i_0`
 
 ## h
 ![formula h](images/eq_h.png)
+
 LaTeX: `h(l, n, i, j) = i_{n - j - 1} \cdot \prod_{k = 0}^{n - j - 2} l_k`
 
 ## f ([\_index](blob/master/sprawl.odin#L50))
 ![formula f](images/eq_f.png)
+
 LaTeX: `f(l, n, i) = \sum_{j = 0}^{n - 3} (h(l_j, i, j)) + g(l, i)`
 
 ## Expanded
 ![expanded formula](images/eq_expanded.png)
+
 LaTeX: `f(l, n, i) = \sum_{j = 0}^{n - 3} \left(i_{n - j - 1} \cdot \prod_{k = 0}^{n - j - 2} l_k\right) + i_1 \cdot l_0 + i_0`
