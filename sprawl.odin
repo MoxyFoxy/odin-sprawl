@@ -25,26 +25,6 @@ import "core:intrinsics"
 // Simplified formula:
 //   - index * size + offset
 
-index :: proc {
-    _index,
-    struct_index,
-};
-
-index_2d :: proc {
-    _index_2d,
-    struct_index_2d,
-};
-
-get :: proc {
-    _get,
-    struct_get,
-};
-
-get_2d :: proc {
-    _get_2d,
-    struct_get_2d,
-};
-
 // Returns index from specified indexes and lengths: slice[index(indexes, lengths)]
 _index :: proc (indexes, lengths: []$NT) -> NT                       where intrinsics.type_is_integer(NT) {
 
@@ -67,19 +47,65 @@ _index :: proc (indexes, lengths: []$NT) -> NT                       where intri
     return output;
 }
 
+// Returns index from specified indexes and lengths: slice[index(indexes, lengths, offsets)] with offsets
+_index_sliced :: proc (indexes, lengths: []$NT, offsets: []NT) -> NT where intrinsics.type_is_integer(NT) {
+
+    // This is formula g
+    // Modified with offsets.
+    output := (indexes[1] + offsets[1]) * (lengths[0] + offsets[0]) +
+              (indexes[0] + offsets[0]);
+
+    // Iterate every value except the last two
+    for i in 0..<len(indexes) - 2 {
+        mul := NT(1);
+
+        // Multiply the lengths together, up to the count of i - 1.
+        for j in 0..<len(lengths) - i - 1 {
+            mul *= (lengths[j] + offsets[j]);
+        }
+
+        index_offset := len(indexes) - i - 1;
+
+        // This is formula h
+        // Modified with offsets.
+        output += (indexes[index_offset] + offsets[index_offset]) * mul;
+    }
+
+    return output;
+}
+
 // Returns index from x, y, and sizex for a 2D array
 _index_2d :: inline proc (x, y, sizex: $NT) -> NT                    where intrinsics.type_is_integer(NT) {
     return y * sizex + x;
 }
 
-// Returns element instead of index: get(slice, indexes, lengths)
+// Returns index from x, y, and sizex for a 2D array with offsets
+_index_2d_sliced :: inline proc (x, y, sizex, offx, offy: $NT) -> NT where intrinsics.type_is_integer(NT) {
+    return (y + offy) * sizex + (x + offx);
+}
+
+// Returns element instead of index: _get(slice, indexes, lengths)
 _get :: inline proc (array: []$T, indexes, lengths: []$NT) -> T      where intrinsics.type_is_integer(NT) {
     return array[_index(indexes, lengths)];
 }
 
-// Returns element instead of index: get_2d(slice, y, x, sizex)
+// Returns element instead of index: _get_sliced(slice, indexes, lengths, offsets)
+_get_sliced :: inline proc (array: []$T,
+                            indexes, lengths, offsets: []$NT) -> T   where intrinsics.type_is_integer(NT) {
+
+    return array[_index_sliced(indexes, lengths, offsets)];
+}
+
+// Returns element instead of index: _get_2d(slice, y, x, sizex)
 _get_2d :: inline proc (array: []$T, x, y, sizex: $NT) -> T          where intrinsics.type_is_integer(NT) {
     return array[_index_2d(x, y, sizex)];
+}
+
+// Returns element instead of index: _get_2d_sliced(slice, y, x, sizex, offx, offy)
+_get_2d_sliced :: inline proc (array: []$T, x, y, sizex,
+                               offx, offy: $NT)        -> T          where intrinsics.type_is_integer(NT) {
+
+    return array[_index_2d_sliced(x, y, sizex, offx, offy)];
 }
 
 // Sets an index to a specific value
@@ -87,9 +113,23 @@ _set :: inline proc (array: []$T, indexes, lengths: []$NT, value: T) where intri
     array[_index(indexes, lengths)] = value;
 }
 
+// Sets an index to a specific value with offsets
+_set_sliced :: inline proc (array: []$T, indexes, lengths, offsets: []$NT,
+                     value: T)                                       where intrinsics.type_is_integer(NT) {
+
+    array[_index_sliced(indexes, lengths, offsets)] = value;
+}
+
 // Sets an index to a specific value in a 2D slice
 _set_2d :: inline proc (array: []$T, x, y, sizex: $NT, value: T)     where intrinsics.type_is_integer(NT) {
     array[y * sizex + x] = value;
+}
+
+// Sets an index to a specific value in a 2D slice with offsets
+_set_2d_sliced :: inline proc (array: []$T, x, y, sizex, offx, offy: $NT,
+                               value: T)                             where intrinsics.type_is_integer(NT) {
+
+    array[(y + offy) * sizex + (x + offx)] = value;
 }
 
 // Checks if an index is in-bounds
@@ -122,7 +162,7 @@ create_slice :: proc (lengths: []$NT, $T: typeid) -> []T             where intri
 }
 
 // Creates a sprawled slice. NOTE: made with `make`. Be sure to `delete` it!
-create_slice_const :: proc (lengths: [$N]$NT, $T: typeid) -> []T       where intrinsics.type_is_integer(NT) {
+create_slice_const :: proc (lengths: [$N]$NT, $T: typeid) -> []T     where intrinsics.type_is_integer(NT) {
     mul := NT(1);
 
     for i in 0..<N {
