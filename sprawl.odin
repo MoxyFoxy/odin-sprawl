@@ -26,7 +26,7 @@ import "core:intrinsics"
 //   - index * size + offset
 
 // Returns index from specified indexes and lengths: slice[index(indexes, lengths)]
-_index :: proc (indexes, lengths: []$NT) -> NT                       where intrinsics.type_is_integer(NT) {
+_index :: proc "c" (indexes, lengths: []$NT) -> NT                   where intrinsics.type_is_integer(NT) {
 
     // This is formula g
     output := indexes[1] * lengths[0] + indexes[0];
@@ -48,7 +48,8 @@ _index :: proc (indexes, lengths: []$NT) -> NT                       where intri
 }
 
 // Returns index from specified indexes and lengths: slice[index(indexes, lengths, offsets)] with offsets
-_index_sliced :: proc (indexes, lengths: []$NT, offsets: []NT) -> NT where intrinsics.type_is_integer(NT) {
+_index_sliced :: proc "c" (indexes, lengths: []$NT, offsets: []NT)
+                                                               -> NT where intrinsics.type_is_integer(NT) {
 
     // This is formula g
     // Modified with offsets.
