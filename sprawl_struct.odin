@@ -12,7 +12,7 @@ Sprawl_Array :: struct (T: typeid, NT: typeid) where intrinsics.type_is_integer(
 
 // Abstraction over `_index` and `_index_sliced` for the `Sprawl_Array` struct
 index :: inline proc (ndim: Sprawl_Array($T, $NT), indexes: ..NT) -> NT {
-    if (ndim.slices == nil) {
+    if (ndim.offsets == nil) {
         return _index(indexes, ndim.lengths);
     }
 
@@ -24,6 +24,25 @@ index :: inline proc (ndim: Sprawl_Array($T, $NT), indexes: ..NT) -> NT {
 // Abstraction over `_index_2d` and `_index_2d_sliced` for the `Sprawl_Array` struct
 index_2d :: inline proc (ndim: Sprawl_Array($T, $NT), x, y: NT) -> NT {
     return _index_2d(x, y, ndim.lengths[0]);
+}
+
+// Gets the reference to an element
+ref :: inline proc (ndim: Sprawl_Array($T, $NT), indexes: ..NT) -> ^T {
+    if (ndim.offsets == nil) {
+        return transmute(^T) (transmute(uintptr) &ndim.data[0] +
+                              transmute(uintptr) (_index(indexes, ndim.lengths) * size_of(T)));
+    }
+
+    else {
+        return transmute(^T) (transmute(uintptr) &ndim.data[0] +
+                              transmute(uintptr) (_index_sliced(indexes, ndim.lengths, ndim.offsets) * size_of(T)));
+    }
+}
+
+// Gets the reference to an element in a 2D array
+ref_2d :: inline proc (ndim: Sprawl_Array($T, $NT), x, y: NT) -> ^T {
+    return transmute(^T) (transmute(uintptr) &ndim.data[0] +
+                          transmute(uintptr) (_index_2d(x, y, ndim.lengths) * size_of(T)));
 }
 
 // Abstraction over `_get` and `_get_sliced` for the `Sprawl_Array` struct
@@ -60,7 +79,7 @@ set :: inline proc (ndim: Sprawl_Array($T, $NT), value: T, indexes: ..NT) {
 }
 
 // Abstraction over `_set_2d` and `_set_2d_sliced` for the `Sprawl_Array` struct
-set_2d :: inline proc (ndim: Sprawl_Array($T, $NT), value: T, indexes: ..NT) {
+set_2d :: inline proc (ndim: Sprawl_Array($T, $NT), value: T, x, y: NT) {
     if (ndim.offsets == nil) {
         _set_2d(ndim.data, x, y, ndim.lengths[0], value);
     }
@@ -130,8 +149,8 @@ clone :: proc (ndim: Sprawl_Array($T, $NT)) -> Sprawl_Array(T, NT) {
     new_ndim := Sprawl_Array(nil, ndim.length, nil);
     copy_slice(new_ndim.data, ndim.data);
 
-    if (ndim.slices == nil) {
-        copy_slice(new_ndim.slices, ndim.slices);
+    if (ndim.offsets == nil) {
+        copy_slice(new_ndim.offsets, ndim.offsets);
     }
 
     return new_ndim;
