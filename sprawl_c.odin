@@ -1,6 +1,7 @@
 package sprawl
 
 import "core:fmt"
+import "core:c"
 
 // This encompasses everything in the file.
 // Hence, from here on, though it goes against
@@ -16,7 +17,7 @@ when #config(CCOMPAT, false) {
 import "core:runtime"
 
 sprawlc_Array :: struct {
-    size     : u64,
+    size     : c.size_t,
     data     : rawptr, // [] byte
     n_data   : u32,
     lengths  : rawptr, // [] u32
@@ -72,30 +73,29 @@ sprawlc_get :: proc "c" (ndim: ^sprawlc_Array, dest: rawptr, n_indexes: u32, ind
     fmt.print("Lengths: ");
     fmt.println(lengths);
 
+    fmt.printf("ndim.size: {0}\n", ndim.size);
+
     src: uintptr = transmute(uintptr) ndim;
 
     if (ndim.offsets == nil) {
-        src += cast(uintptr) (cast(u64) _index(indexes, lengths) * ndim.size);
+        src += cast(uintptr) (cast(u64) _index(indexes, lengths) * cast(u64) ndim.size);
     }
 
     else {
         offsets := ccompat_arr_to_u32arr(ndim.offsets, ndim.n_offsets);
 
-        src += cast(uintptr) (cast(u64) _index_sliced(indexes, lengths, offsets) * ndim.size);
+        src += cast(uintptr) (cast(u64) _index_sliced(indexes, lengths, offsets) * cast(u64) ndim.size);
     }
 
-    runtime.mem_copy(dest, transmute(rawptr) src, cast(int) ndim.size);
+    runtime.mem_copy(dest, transmute(rawptr) src, cast(int) ndim.n_lengths * cast(int) ndim.size);
 }
 
 @export
 @(link_name="_sprawlc_set")
 sprawlc_set :: proc "c" (ndim: ^sprawlc_Array, src: rawptr, n_indexes: u32, indexes: rawptr) {
     context = runtime.default_context();
-    fmt.println("Got here");
     indexes := ccompat_arr_to_u32arr(indexes,      n_indexes);
     lengths := ccompat_arr_to_u32arr(ndim.lengths, ndim.n_lengths);
-
-    fmt.println("Got here");
 
     fmt.print("Indexes: ");
     fmt.println(indexes);
@@ -103,19 +103,24 @@ sprawlc_set :: proc "c" (ndim: ^sprawlc_Array, src: rawptr, n_indexes: u32, inde
     fmt.print("Lengths: ");
     fmt.println(lengths);
 
+    fmt.printf("ndim.size: {0}\n", ndim.size);
+
     dest: uintptr = transmute(uintptr) ndim;
 
     if (ndim.offsets == nil) {
-        dest += cast(uintptr) (cast(u64) _index(indexes, lengths) * ndim.size);
+        dest += cast(uintptr) (cast(u64) _index(indexes, lengths) * cast(u64) ndim.size);
+    fmt.printf("ndim.size - nil: {0}\n", ndim.size);
     }
 
     else {
         offsets := ccompat_arr_to_u32arr(ndim.offsets, ndim.n_offsets);
 
-        dest += cast(uintptr) (cast(u64) _index_sliced(indexes, lengths, offsets) * ndim.size);
+        dest += cast(uintptr) (cast(u64) _index_sliced(indexes, lengths, offsets) * cast(u64) ndim.size);
+    fmt.printf("ndim.size - not nil: {0}\n", ndim.size);
     }
 
-    runtime.mem_copy(transmute(rawptr) dest, src, cast(int) ndim.size);
+    runtime.mem_copy(transmute(rawptr) dest, src, cast(int) ndim.n_lengths * cast(int) ndim.size);
+    fmt.printf("ndim.size - mem_copy: {0}\n", ndim.size);
 }
 
 }

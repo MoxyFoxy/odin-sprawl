@@ -34,15 +34,19 @@ int main () {
 
     arr = sprawlc_create(sizeof(uint32_t), 2, 2, 2, 2, 2, 2);
 
-    int o = 0;
+    uint32_t o = 0;
     uint32_t p = 0;
 
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 2; j++) {
-            for (int k = 0; k < 2; k++) {
-                for (int l = 0; l < 2; l++) {
-                    for (int m = 0; m < 2; m++) {
-                        for (int n = 0; n < 2; n++) {
+    for (uint32_t i = 0; i < 2; i++) {
+        for (uint32_t j = 0; j < 2; j++) {
+            for (uint32_t k = 0; k < 2; k++) {
+                for (uint32_t l = 0; l < 2; l++) {
+                    for (uint32_t m = 0; m < 2; m++) {
+                        for (uint32_t n = 0; n < 2; n++) {
+                            printf("Indexes-C: [");
+
+                            printf("%d, %d, %d, %d, %d, %d]\n", i, j, k, l, m, n);
+
                             sprawlc_set(&arr, &o, i, j, k, l, m, n);
                             sprawlc_get(&arr, &p, i, j, k, l, m, n);
                             printf("%d ", p);
@@ -56,11 +60,16 @@ int main () {
         }
     }
 
-    for (int i = 0; i < arr.n_data; i++) {
+    for (uint32_t i = 0; i < arr.n_data; i++) {
         if (i != 0)
             printf(", ");
 
-        printf("%d", *((uint32_t *)(arr.data + i * sizeof(uint32_t))));
+        printf("%d", *((uint32_t *)(arr.data + i * arr.size)));
     }
+
     printf("\n");
+
+    printf("arr.size: %d\n", arr.size);
+
+    printf("size_t size: %d\n", sizeof(size_t));
 }

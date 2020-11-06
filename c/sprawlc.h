@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 typedef struct sprawlc_Array {
-    uint64_t  size     ;
+    size_t    size     ;
 
     void     *data     ;
     uint32_t  n_data   ;
