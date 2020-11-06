@@ -36,6 +36,9 @@ int main () {
 
     uint32_t o = 0;
     uint32_t p = 0;
+    uint32_t q = 0;
+
+    printf("[");
 
     for (uint32_t i = 0; i < 2; i++) {
         for (uint32_t j = 0; j < 2; j++) {
@@ -43,22 +46,34 @@ int main () {
                 for (uint32_t l = 0; l < 2; l++) {
                     for (uint32_t m = 0; m < 2; m++) {
                         for (uint32_t n = 0; n < 2; n++) {
-                            printf("Indexes-C: [");
-
-                            printf("%d, %d, %d, %d, %d, %d]\n", i, j, k, l, m, n);
-
                             sprawlc_set(&arr, &o, i, j, k, l, m, n);
+
+                            if (i + j + k + l + m + n != 0) {
+                                printf(", ");
+                            }
+
+                            printf("i: %d\n", i);
+                            printf("j: %d\n", j);
+                            printf("k: %d\n", k);
+                            printf("l: %d\n", l);
+                            printf("m: %d\n", m);
+                            printf("n: %d\n", n);
+
                             sprawlc_get(&arr, &p, i, j, k, l, m, n);
-                            printf("%d ", p);
+
+                            printf("%d", p);
                             o += 1;
+                            q += 1;
                         }
-                        printf("\n");
                     }
-                    printf("\n");
                 }
             }
         }
     }
+
+    printf("]\n");
+
+    printf("[");
 
     for (uint32_t i = 0; i < arr.n_data; i++) {
         if (i != 0)
@@ -67,9 +82,18 @@ int main () {
         printf("%d", *((uint32_t *)(arr.data + i * arr.size)));
     }
 
-    printf("\n");
+    printf("]\n");
 
-    printf("arr.size: %d\n", arr.size);
+    printf("[");
 
-    printf("size_t size: %d\n", sizeof(size_t));
+    for (uint32_t i = 0; i < arr.n_data; i++) {
+        if (i != 0)
+            printf(", ");
+
+        printf("%d", *((uint32_t *)(arr.data + i * arr.size)));
+    }
+
+    printf("]\n");
+
+    printf("q: %d\n", q);
 }

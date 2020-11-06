@@ -27,4 +27,5 @@ main :: proc () {
     }
 
     fmt.println(sprawl_arr.data);
+    fmt.printf("o: {0}\n", o);
 }
