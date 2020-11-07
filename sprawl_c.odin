@@ -14,7 +14,7 @@ when #config(CCOMPAT, false) {
 import "core:runtime"
 import "core:c"
 
-sprawlc_Array :: struct {
+sprawlc_Slice :: struct {
     size     : c.size_t,
     data     : rawptr, // [] byte
     n_data   : u32,
@@ -34,7 +34,7 @@ ccompat_arr_to_u32arr :: inline proc "c" (arr: rawptr, len: u32) -> [] u32 {
 
 @export
 @(link_name="_sprawlc_index")
-sprawlc_index :: proc "c" (ndim: ^sprawlc_Array, n_indexes: u32, indexes: rawptr) -> u32 {
+sprawlc_index :: proc "c" (ndim: ^sprawlc_Slice, n_indexes: u32, indexes: rawptr) -> u32 {
     indexes := ccompat_arr_to_u32arr(indexes,      n_indexes);
     lengths := ccompat_arr_to_u32arr(ndim.lengths, ndim.n_lengths);
 
@@ -51,7 +51,7 @@ sprawlc_index :: proc "c" (ndim: ^sprawlc_Array, n_indexes: u32, indexes: rawptr
 
 @export
 @(link_name="_sprawlc_get")
-sprawlc_get :: proc "c" (ndim: ^sprawlc_Array, dest: rawptr, n_indexes: u32, indexes: rawptr) {
+sprawlc_get :: proc "c" (ndim: ^sprawlc_Slice, dest: rawptr, n_indexes: u32, indexes: rawptr) {
     indexes := ccompat_arr_to_u32arr(indexes,      n_indexes);
     lengths := ccompat_arr_to_u32arr(ndim.lengths, ndim.n_lengths);
 
@@ -72,7 +72,7 @@ sprawlc_get :: proc "c" (ndim: ^sprawlc_Array, dest: rawptr, n_indexes: u32, ind
 
 @export
 @(link_name="_sprawlc_set")
-sprawlc_set :: proc "c" (ndim: ^sprawlc_Array, src: rawptr, n_indexes: u32, indexes: rawptr) {
+sprawlc_set :: proc "c" (ndim: ^sprawlc_Slice, src: rawptr, n_indexes: u32, indexes: rawptr) {
     indexes := ccompat_arr_to_u32arr(indexes,      n_indexes);
     lengths := ccompat_arr_to_u32arr(ndim.lengths, ndim.n_lengths);
 
@@ -89,6 +89,25 @@ sprawlc_set :: proc "c" (ndim: ^sprawlc_Array, src: rawptr, n_indexes: u32, inde
     }
 
     runtime.mem_copy(cast(rawptr) dest, src, cast(int) ndim.size);
+}
+
+@export
+@(link_name="_sprawlc_ref")
+sprawlc_ref :: proc "c" (ndim: ^sprawlc_Slice, n_indexes: u32, indexes: rawptr) -> rawptr {
+    indexes := ccompat_arr_to_u32arr(indexes,      n_indexes);
+    lengths := ccompat_arr_to_u32arr(ndim.lengths, ndim.n_lengths);
+
+    if (ndim.offsets == nil) {
+        return cast(rawptr) (cast(uintptr) ndim.data +
+                             cast(uintptr) (_index(indexes, lengths) * cast(u32) ndim.size));
+    }
+
+    else {
+        offsets := ccompat_arr_to_u32arr(ndim.offsets, ndim.n_offsets);
+
+        return cast(rawptr) (cast(uintptr) ndim.data +
+                             cast(uintptr) (_index_sliced(indexes, lengths, offsets) * cast(u32) ndim.size));
+    }
 }
 
 }

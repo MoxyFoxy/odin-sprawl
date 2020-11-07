@@ -5,7 +5,7 @@
 
 #include "sprawlc.h"
 
-sprawlc_Array _sprawlc_create(size_t size, uint32_t n_dimensions, void *dimensions) {
+sprawlc_Slice _sprawlc_create(size_t size, uint32_t n_dimensions, void *dimensions) {
     uint32_t data_size = 1;
 
     for (int i = 0; i < n_dimensions; i++) {
